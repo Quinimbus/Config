@@ -2,9 +2,11 @@ package cloud.quinimbus.config.microprofile;
 
 import cloud.quinimbus.config.api.ConfigNode;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigValue;
 
 public class MicroprofileConfigNode implements ConfigNode {
@@ -12,13 +14,16 @@ public class MicroprofileConfigNode implements ConfigNode {
     private final String name;
 
     private final ConfigValue mpValue;
+    
+    private final Config mpConfig;
 
     private final Map<String, MicroprofileConfigNode> children;
 
-    public MicroprofileConfigNode(String name, ConfigValue mpValue) {
+    public MicroprofileConfigNode(String name, ConfigValue mpValue, Config mpConfig) {
         this.name = name;
         this.mpValue = mpValue;
         this.children = new LinkedHashMap<>();
+        this.mpConfig = mpConfig;
     }
 
     @Override
@@ -49,10 +54,17 @@ public class MicroprofileConfigNode implements ConfigNode {
 
     public void addNode(int offset, String[] path, ConfigValue mpValue) {
         if (offset == path.length - 1) {
-            this.children.put(path[offset], new MicroprofileConfigNode(path[offset], mpValue));
+            this.children.put(path[offset], new MicroprofileConfigNode(path[offset], mpValue, this.mpConfig));
         } else {
-            this.children.computeIfAbsent(path[offset], k -> new MicroprofileConfigNode(k, null))
+            this.children.computeIfAbsent(path[offset], k -> new MicroprofileConfigNode(k, null, this.mpConfig))
                     .addNode(offset + 1, path, mpValue);
         }
+    }
+
+    @Override
+    public Stream<String> asStringList() {
+        return this.mpConfig.getOptionalValues(this.mpValue.getName(), String.class)
+                .map(List::stream)
+                .orElseGet(Stream::empty);
     }
 }

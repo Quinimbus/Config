@@ -9,4 +9,6 @@ public interface ConfigNode extends ConfigRoot {
     Stream<? extends ConfigNode> stream();
     
     String asString();
+    
+    Stream<String> asStringList();
 }

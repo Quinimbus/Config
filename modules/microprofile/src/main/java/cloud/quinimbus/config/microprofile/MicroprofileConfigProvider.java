@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigValue;
 
 @Provider(name = "Microprofile configuration provider", alias = "microprofile", priority = 100)
@@ -24,20 +25,22 @@ public class MicroprofileConfigProvider implements ConfigProvider {
         var mpConfig = org.eclipse.microprofile.config.ConfigProvider.getConfig();
         StreamSupport.stream(mpConfig.getPropertyNames().spliterator(), false)
                 .filter(k -> k.startsWith("quinimbus."))
+                .map(s -> s.endsWith("]") ? s.substring(0, s.lastIndexOf("[")) : s)
+                .distinct()
                 .map(mpConfig::getConfigValue)
                 .sorted((cv1, cv2) -> cv1.getName().compareTo(cv2.getName()))
-                .forEach(this::addToTree);
+                .forEach(cv -> this.addToTree(cv, mpConfig));
         return this.rootNodes.values().stream();
     }
 
-    private void addToTree(ConfigValue mpValue) {
+    private void addToTree(ConfigValue mpValue, Config config) {
         var path = mpValue.getName().substring(10).split("\\.");
         if (path.length == 1) {
-            this.rootNodes.put(path[0], new MicroprofileConfigNode(path[0], mpValue));
+            this.rootNodes.put(path[0], new MicroprofileConfigNode(path[0], mpValue, config));
         } else {
             this.rootNodes.computeIfAbsent(
                     path[0],
-                    k -> new MicroprofileConfigNode(path[0], mpValue)).addNode(1, path, mpValue);
+                    k -> new MicroprofileConfigNode(path[0], mpValue, config)).addNode(1, path, mpValue);
         }
     }
 }

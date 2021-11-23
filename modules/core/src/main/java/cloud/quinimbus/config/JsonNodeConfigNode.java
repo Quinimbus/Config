@@ -47,4 +47,16 @@ public class JsonNodeConfigNode implements ConfigNode {
                 .map(p -> this.node.get(path[offset]))
                 .flatMap(jn -> (new JsonNodeConfigNode(path[offset], jn)).asNode(offset + 1, path));
     }
+
+    @Override
+    public Stream<String> asStringList() {
+        if(this.node.isArray()) {
+            return StreamSupport.stream(
+                    Spliterators.spliteratorUnknownSize(this.node.elements(), Spliterator.IMMUTABLE),
+                    false)
+                    .map(JsonNode::asText);
+        } else {
+            return Stream.of(this.asString());
+        }
+    }
 }

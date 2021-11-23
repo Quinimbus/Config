@@ -1,6 +1,7 @@
 package cloud.quinimbus.config.api;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public interface ConfigRoot {
         
@@ -22,5 +23,13 @@ public interface ConfigRoot {
     
     default Optional<String> asString(String path) {
         return this.asNode(path).map(ConfigNode::asString);
+    }
+    
+    default Stream<String> asStringList(String... path) {
+        return this.asNode(path).map(ConfigNode::asStringList).orElseGet(Stream::empty);
+    }
+    
+    default Stream<String> asStringList(String path) {
+        return this.asNode(path).map(ConfigNode::asStringList).orElseGet(Stream::empty);
     }
 }

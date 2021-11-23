@@ -42,4 +42,9 @@ public class MergedConfigNode implements ConfigNode {
             return Optional.of(new MergedConfigNode(n1.orElseThrow(), n2.orElseThrow()));
         }
     }
+
+    @Override
+    public Stream<String> asStringList() {
+        return this.node1.asStringList();
+    }
 }
