@@ -27,8 +27,7 @@ public class JsonNodeConfigNode implements ConfigNode {
     @Override
     public Stream<ConfigNode> stream() {
         return StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(this.node.fields(), Spliterator.IMMUTABLE),
-                false)
+                        Spliterators.spliteratorUnknownSize(this.node.fields(), Spliterator.IMMUTABLE), false)
                 .map(e -> new JsonNodeConfigNode(e.getKey(), e.getValue()));
     }
 
@@ -50,10 +49,9 @@ public class JsonNodeConfigNode implements ConfigNode {
 
     @Override
     public Stream<String> asStringList() {
-        if(this.node.isArray()) {
+        if (this.node.isArray()) {
             return StreamSupport.stream(
-                    Spliterators.spliteratorUnknownSize(this.node.elements(), Spliterator.IMMUTABLE),
-                    false)
+                            Spliterators.spliteratorUnknownSize(this.node.elements(), Spliterator.IMMUTABLE), false)
                     .map(JsonNode::asText);
         } else {
             return Stream.of(this.asString());

@@ -38,9 +38,9 @@ public class MicroprofileConfigProvider implements ConfigProvider {
         if (path.length == 1) {
             this.rootNodes.put(path[0], new MicroprofileConfigNode(path[0], mpValue, config));
         } else {
-            this.rootNodes.computeIfAbsent(
-                    path[0],
-                    k -> new MicroprofileConfigNode(path[0], mpValue, config)).addNode(1, path, mpValue);
+            this.rootNodes
+                    .computeIfAbsent(path[0], k -> new MicroprofileConfigNode(path[0], mpValue, config))
+                    .addNode(1, path, mpValue);
         }
     }
 }

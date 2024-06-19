@@ -1,12 +1,12 @@
-import cloud.quinimbus.config.api.ConfigProvider;
 import cloud.quinimbus.config.QuinimbusYAMLConfigProvider;
+import cloud.quinimbus.config.api.ConfigProvider;
 
 module cloud.quinimbus.config.core {
-    
-    provides ConfigProvider with QuinimbusYAMLConfigProvider;
-    
+    provides ConfigProvider with
+            QuinimbusYAMLConfigProvider;
+
     uses ConfigProvider;
-    
+
     requires cloud.quinimbus.common.annotations;
     requires cloud.quinimbus.config.api;
     requires cloud.quinimbus.tools;

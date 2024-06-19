@@ -23,7 +23,8 @@ public class ConfigNodeProducer {
         if (pathAnno.optional()) {
             return this.configContext.asNode(path).orElse(null);
         } else {
-            return this.configContext.asNode(path)
+            return this.configContext
+                    .asNode(path)
                     .orElseThrow(() -> new ConfigException(
                             "Injected configuration for key %s is missing and not optional".formatted(path)));
         }

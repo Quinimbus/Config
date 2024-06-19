@@ -19,11 +19,10 @@ public abstract class AbstractYAMLConfigProvider implements ConfigProvider {
     @Override
     public Stream<? extends ConfigNode> provide() throws ConfigException {
         var mapper = new ObjectMapper(new YAMLFactory());
-        try ( var source = this.getSource()) {
+        try (var source = this.getSource()) {
             var root = mapper.readTree(source);
             return StreamSupport.stream(
-                    Spliterators.spliteratorUnknownSize(root.fields(), Spliterator.IMMUTABLE),
-                    false)
+                            Spliterators.spliteratorUnknownSize(root.fields(), Spliterator.IMMUTABLE), false)
                     .map(e -> new JsonNodeConfigNode(e.getKey(), e.getValue()));
         } catch (IOException ex) {
             throw new ConfigException("Cannot read the yaml configuration", ex);

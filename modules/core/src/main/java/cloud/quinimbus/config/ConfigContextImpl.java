@@ -26,8 +26,8 @@ public class ConfigContextImpl implements ConfigContext {
                 .peek(p -> {
                     System.out.println("Found config provider " + p.type());
                     if (p.type().getAnnotation(Provider.class) == null) {
-                        throw new ConfigException(
-                                "The provider class %s is missing the @Provider annotation".formatted(p.type().getName()));
+                        throw new ConfigException("The provider class %s is missing the @Provider annotation"
+                                .formatted(p.type().getName()));
                     }
                 })
                 .sorted((p1, p2) -> Integer.compare(
