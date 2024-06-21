@@ -3,11 +3,11 @@ package cloud.quinimbus.config.cdi;
 import cloud.quinimbus.config.api.ConfigContext;
 import cloud.quinimbus.config.api.ConfigException;
 import cloud.quinimbus.config.api.ConfigNode;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class ConfigNodeProducer {

@@ -2,8 +2,8 @@ package cloud.quinimbus.config.cdi;
 
 import cloud.quinimbus.config.api.ConfigContext;
 import java.util.ServiceLoader;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 
 @ApplicationScoped
 public class ConfigContextProducer {
