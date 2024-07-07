@@ -4,6 +4,8 @@ import cloud.quinimbus.config.api.ConfigProvider;
 module cloud.quinimbus.config.core {
     provides ConfigProvider with
             QuinimbusYAMLConfigProvider;
+    provides cloud.quinimbus.config.api.ConfigContext with
+            cloud.quinimbus.config.ConfigContextImpl;
 
     uses ConfigProvider;
 
