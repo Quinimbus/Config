@@ -6,7 +6,9 @@ import cloud.quinimbus.tools.function.LazySingletonSupplier;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Map;
+import java.util.SequencedMap;
 import java.util.ServiceLoader;
+import java.util.TreeMap;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
@@ -46,9 +48,10 @@ public class ConfigContextTest {
 
     @Test
     public void testYAML() throws ConfigException {
-        var ctx = new ConfigContextImpl(Map.of(
-                "yaml1", new LazySingletonSupplier<>(YAMLConfig1::new, YAMLConfig1.class),
-                "yaml2", new LazySingletonSupplier<>(YAMLConfig2::new, YAMLConfig2.class)));
+        var impl = new TreeMap<String, LazySingletonSupplier<ConfigProvider>>();
+        impl.put("yaml1", new LazySingletonSupplier<>(YAMLConfig1::new, YAMLConfig1.class));
+        impl.put("yaml2", new LazySingletonSupplier<>(YAMLConfig2::new, YAMLConfig2.class));
+        var ctx = new ConfigContextImpl(impl);
         var test = ctx.asString("A", "B", "C");
         assertEquals("Test", test.orElseThrow());
         var empty = ctx.asString("A", "B", "D");
