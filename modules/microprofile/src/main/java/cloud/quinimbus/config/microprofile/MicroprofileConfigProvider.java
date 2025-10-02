@@ -11,7 +11,7 @@ import java.util.stream.StreamSupport;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigValue;
 
-@Provider(name = "Microprofile configuration provider", alias = "microprofile", priority = 100)
+@Provider(id = "microprofile", name = "Microprofile configuration provider", priority = 100)
 public class MicroprofileConfigProvider implements ConfigProvider {
 
     private final Map<String, MicroprofileConfigNode> rootNodes;

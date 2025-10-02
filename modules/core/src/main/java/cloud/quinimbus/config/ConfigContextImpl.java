@@ -1,15 +1,15 @@
 package cloud.quinimbus.config;
 
-import cloud.quinimbus.common.annotations.Provider;
+import cloud.quinimbus.common.tools.ProviderLoader;
 import cloud.quinimbus.config.api.ConfigContext;
 import cloud.quinimbus.config.api.ConfigException;
 import cloud.quinimbus.config.api.ConfigNode;
 import cloud.quinimbus.config.api.ConfigProvider;
+import cloud.quinimbus.tools.function.LazySingletonSupplier;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import name.falgout.jeffrey.throwing.stream.ThrowingStream;
 
 public class ConfigContextImpl implements ConfigContext {
@@ -17,23 +17,15 @@ public class ConfigContextImpl implements ConfigContext {
     private Map<String, ConfigNode> rootNodes;
 
     public ConfigContextImpl() throws ConfigException {
-        this(ServiceLoader.load(ConfigProvider.class).stream());
+        this(ProviderLoader.loadProviders(ConfigProvider.class, ServiceLoader::load, false));
     }
 
     // for unit testing
-    ConfigContextImpl(Stream<java.util.ServiceLoader.Provider<ConfigProvider>> providers) throws ConfigException {
-        this.rootNodes = ThrowingStream.of(providers, ConfigException.class)
-                .peek(p -> {
-                    System.out.println("Found config provider " + p.type());
-                    if (p.type().getAnnotation(Provider.class) == null) {
-                        throw new ConfigException("The provider class %s is missing the @Provider annotation"
-                                .formatted(p.type().getName()));
-                    }
-                })
-                .sorted((p1, p2) -> Integer.compare(
-                        p1.type().getAnnotation(Provider.class).priority(),
-                        p2.type().getAnnotation(Provider.class).priority()))
-                .map(p -> p.get())
+    ConfigContextImpl(Map<String, LazySingletonSupplier<ConfigProvider>> providers) throws ConfigException {
+        this.rootNodes = ThrowingStream.of(providers.entrySet().stream(), ConfigException.class)
+                .peek(p -> System.out.println(
+                        "Found config provider " + p.getValue().getRawType().getName()))
+                .map(p -> p.getValue().get())
                 .flatMap(cp -> ThrowingStream.of(cp.provide(), ConfigException.class))
                 .collect(Collectors.toMap(cn -> cn.name(), cn -> cn, (cn1, cn2) -> new MergedConfigNode(cn1, cn2)));
     }

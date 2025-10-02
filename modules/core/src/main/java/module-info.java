@@ -10,6 +10,7 @@ module cloud.quinimbus.config.core {
     uses ConfigProvider;
 
     requires cloud.quinimbus.common.annotations;
+    requires cloud.quinimbus.common.tools;
     requires cloud.quinimbus.config.api;
     requires cloud.quinimbus.tools;
     requires com.fasterxml.jackson.databind;

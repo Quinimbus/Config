@@ -9,10 +9,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 
-@Provider(
-        name = "Quinimbus YAML Config Provider",
-        alias = {"quinimbus.yml"},
-        priority = 10)
+@Provider(id = "quinimbusyaml", name = "Quinimbus YAML Config Provider", priority = 10)
 public class QuinimbusYAMLConfigProvider extends AbstractYAMLConfigProvider {
 
     @Override
