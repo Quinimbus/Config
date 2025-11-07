@@ -1,15 +1,14 @@
 package cloud.quinimbus.config;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import cloud.quinimbus.config.api.ConfigException;
 import cloud.quinimbus.config.api.ConfigProvider;
 import cloud.quinimbus.tools.function.LazySingletonSupplier;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Map;
-import java.util.SequencedMap;
 import java.util.ServiceLoader;
 import java.util.TreeMap;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 public class ConfigContextTest {
@@ -18,14 +17,13 @@ public class ConfigContextTest {
 
         @Override
         public Reader getSource() {
-            return new StringReader(
-                    """
-                        A:
-                            B:
-                                C: "Test"
-                        X:
-                            XA: 13
-                        """);
+            return new StringReader("""
+                                    A:
+                                        B:
+                                            C: "Test"
+                                    X:
+                                        XA: 13
+                                    """);
         }
     }
 
@@ -33,13 +31,12 @@ public class ConfigContextTest {
 
         @Override
         public Reader getSource() {
-            return new StringReader(
-                    """
-                        X:
-                            XA: "Hopefully not applied"
-                            Y:
-                                Z: "Test2"
-                        """);
+            return new StringReader("""
+                                    X:
+                                        XA: "Hopefully not applied"
+                                        Y:
+                                            Z: "Test2"
+                                    """);
         }
     }
 
